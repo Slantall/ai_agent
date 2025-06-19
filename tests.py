@@ -1,33 +1,25 @@
 # tests.py
 
 import unittest
-from functions.get_files_info import get_files_info
+from functions.write_file import write_file
 
 
-class TestCalculator(unittest.TestCase):
-    def test_default_dir(self):
-        result = get_files_info("calculator", ".")
+class TestWriteFiles(unittest.TestCase):
+    def test_main(self):
+        result = write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum")
         print(result)
-        print("Expecting no error")
+        
 
-    def test_sub_dir(self):
-        result = get_files_info("calculator", "pkg")
+    def test_calculator(self):
+        result = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
         print(result)
-        print("Expecting no error")
+        
 
-    def test_nonexistant_dir(self):
-        result = get_files_info("calculator", "/bin")
+    def test_nonexistant(self):
+        result = write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
         print(result)
-        self.assertEqual(result, 'Error: Cannot list "/bin" as it is outside the permitted working directory')
+        
 
-    def test_parent_dir(self):
-        result = get_files_info("calculator", "../")
-        print(result)
-        self.assertEqual(result, 'Error: Cannot list "../" as it is outside the permitted working directory')
-    def test_nonexistant_dir2(self):
-        result = get_files_info("calculator", "s")
-        print(result)
-        self.assertEqual(result, 'Error: "s" is not a directory')
 
 if __name__ == "__main__":
     unittest.main()
