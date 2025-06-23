@@ -3,7 +3,7 @@ import sys
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from call_function import available_functions
+from call_function import available_functions, call_function
 
 def main():
     load_dotenv()
@@ -38,8 +38,8 @@ def main():
             tools=[available_functions], system_instruction=system_prompt
         ),
     )
-
-    if "--verbose" in sys.argv:
+    verbose = "--verbose" in sys.argv
+    if verbose:
         print(f"User prompt: {user_prompt}")
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
@@ -49,7 +49,11 @@ def main():
 
     if response.function_calls != []:
         for function_call_part in response.function_calls:
-            print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+            function_call_result = call_function(function_call_part, verbose)
+            if not function_call_result.parts[0].function_response.response:
+                raise Exception("Response not found for function call")
+            if verbose:
+                print(f"-> {function_call_result.parts[0].function_response.response}")
     else:
         print(response.text)
 
