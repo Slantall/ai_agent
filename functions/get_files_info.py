@@ -21,7 +21,6 @@ def get_files_info(working_directory, directory=None):
             is_file = not os.path.isfile(file_path)
             full_str = (f"- {file}: file_size={size} bytes, is_dir={is_file}")
             formatted_file_info.append(full_str)
-            print(full_str)
         return "\n".join(formatted_file_info)
     except Exception as e:
         return f"Error listing files: {e}"
